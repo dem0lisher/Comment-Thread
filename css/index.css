@@ -1,0 +1,135 @@
+/*Reset CSS*/
+*{
+	box-sizing: border-box;
+	outline-style: none;
+	font-family: sans-serif;
+}
+/*Generic CSS*/
+.flex-row{
+	display: flex;
+	flex-direction: row;
+}
+.flex-column{
+	display: flex; 
+	flex-direction: column;
+}
+.flex-center{
+	justify-content: center;
+	align-items: center;
+}
+.flex-start{
+	justify-content: flex-start;
+}
+.flex-end{
+	justify-content: flex-end;
+}
+.flex-valign{
+	align-items: center;
+}
+.hidden{
+	display: none !important;
+}
+/*Specific CSS from top to bottom*/
+section{
+	background: #F5F5F5;
+	border-radius: 5px;
+	margin: 0 auto;
+	padding: 10px;
+	width: 50%;
+}
+#heading{
+	padding: 10px 0;
+}
+/* New Post and Comment CSS */
+#new-post-status, #new-post-username, .new-comment-status, .new-comment-username{
+	border-radius: 5px;
+	border: 1px solid #d0cfcf;
+	box-shadow: 0 2px 0 0 rgba(224, 224, 224, 0.85) inset;
+	font-size: 14px;
+	width: 100%;
+}
+#new-post-status, .new-comment-status{
+	padding: 5px 10px;
+}
+#new-post-username, .new-comment-username{
+	margin: 0 10px 0 0;
+	padding: 13px 10px;
+}
+#new-post-status:focus, #new-post-username:focus, .new-comment-status:focus, .new-comment-username:focus{
+	outline: blue;
+	outline-style: auto;
+}
+#new-post-btn, .new-comment-btn{
+	background: #DCDCDC;
+	border-radius: 5px;
+	border: 2px solid #c1bfbf;
+	font-size: 14px;
+}
+/* Post and Comment CSS */
+#posts-container{
+	padding: 10px;
+}
+.post{
+	padding: 0 0 10px 0;
+}
+.profile-img{
+	border-radius: 5px;
+	box-shadow: 0 3px 3px 1px #bababa;
+	height: 50px;
+	width: 50px;
+}
+.post-details{
+	font-size: 16px;
+	padding: 0 0 0 10px;
+	width: 100%;
+}
+.author-name{
+	color: #5319c5;
+}
+.arrow{
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	color: rgba(0,0,0,0.54);
+	cursor: pointer;
+	height: 0;
+	margin: 0 5px 0 0;
+	width: 0;
+}
+.arrow-up{
+	border-bottom: 8px solid rgba(0,0,0,0.54);
+}
+.arrow-down{
+	border-top: 8px solid rgba(0,0,0,0.54);
+}
+.net-votes{
+	color: green;
+	font-size: 14px;
+	margin-right: 7px;
+}
+.reply-btn, .share-btn{
+	color: rgba(0,0,0,0.54);
+	font-size: 14px;
+	margin-right: 7px;
+	text-decoration: none;
+}
+.comments-container{
+	padding: 10px 0 0 60px;
+}
+.new-comment-form{
+	padding: 10px 0 0 0;
+}
+@media screen and (max-width: 1200px) and (min-width: 1025px){
+	section{
+		width: 60%;
+	}
+}
+@media screen and (max-width: 1024px) and (min-width: 769px){
+	section{
+		width: 70%;
+	}
+}
+@media screen and (max-width: 768px){
+	section{
+		width: 100%;
+	}
+}

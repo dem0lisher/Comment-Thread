@@ -1,0 +1,66 @@
+{
+  "posts": [
+    {
+      "name": "Kerem Suer",
+      "profileImage": "user.jpg",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit at placeat accusamus asperiores voluptatum enim reprehenderit, error culpa consequatur fuga accusantium assumenda, quasi, obcaecati ab quas et tempore vitae est?",
+      "votes": 2,
+      "createdAt": "15/09/2018, 00:30:26",
+      "id": "sudkm5c"
+    },
+    {
+      "name": "kjvhgjvgklhg",
+      "profileImage": "user.jpg",
+      "text": "hbklblkh",
+      "votes": 0,
+      "createdAt": "15/09/2018, 00:33:26",
+      "id": "midtX4G"
+    },
+    {
+      "name": "treytrt;",
+      "profileImage": "user.jpg",
+      "text": "kjhvkjgjkh",
+      "votes": 0,
+      "createdAt": "15/09/2018, 00:34:39",
+      "id": "cxk84iy"
+    }
+  ],
+  "comments": [
+    {
+      "name": "kdvjbkelfj",
+      "profileImage": "user.jpg",
+      "text": "nicekjhhlkj",
+      "votes": 0,
+      "createdAt": "15/09/2018, 14:06:51",
+      "level": 1,
+      "postId": "cxk84iy",
+      "hasChild": false,
+      "childId": "",
+      "id": "eud73nk"
+    },
+    {
+      "name": "rsfcgvbn",
+      "profileImage": "user.jpg",
+      "text": "kjbkjlbblkmk",
+      "votes": 0,
+      "createdAt": "15/09/2018, 14:08:38",
+      "level": 1,
+      "postId": "midtX4G",
+      "hasChild": true,
+      "childId": "kjake3c",
+      "id": "dfjb5jh"
+    },
+    {
+      "name": "dsjgfwdugye",
+      "profileImage": "user.jpg",
+      "text": "sdkjkgbgk",
+      "votes": 0,
+      "createdAt": "15/09/2018, 14:08:38",
+      "level": 2,
+      "postId": "midtX4G",
+      "hasChild": false,
+      "childId": "",
+      "id": "kjake3c"
+    }
+  ]
+}
