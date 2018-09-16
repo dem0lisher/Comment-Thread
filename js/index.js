@@ -68,6 +68,18 @@
     });
   }
 
+  function putData(url, data, callback){
+    ajaxRequest("PUT", url, data, function(xhr) {
+      if (xhr == 404) {
+        callback(null);
+      }
+      else {
+        required_data = JSON.parse(xhr.responseText);
+        callback(required_data);
+      }
+    });
+  }
+
   function submitPost(){
     var newPostStatus = document.getElementById('new-post-status').value;
     var newPostUsername = document.getElementById('new-post-username').value;
@@ -95,17 +107,17 @@
     }
   }
 
-  function castVote(){
+  function castVote(e){
     debugger;
     if(this.classList.contains('arrow-up')){
-      var data = {id: this.dataset.id, votes: 1};
-      postData('update-vote', data, function(postsData){
-        debugger;
-      });
+      var data = {votes: document.getElementById('net-votes-'+e.currentTarget.dataset.post.id).innerHTML + 1};
     }
     else{
-
+      var data = {votes: document.getElementById('net-votes-'+e.currentTarget.dataset.post.id).innerHTML - 1};
     }
+    putData('posts/'+this.dataset.id, data, function(postsData){
+      debugger;
+    });
   }
 
   function populatePosts(postsData){
@@ -123,13 +135,13 @@
                     <div class="author-name">`
                       + postsData[i].name +
                     `</div>
-                    <div>`
+                    <div class="content">`
                       + postsData[i].text +
                     `</div>
                     <div class="flex-row flex-valign">
                       <div class="arrow arrow-up" data-id="` + postsData[i].id + `"></div>
                       <div class="arrow arrow-down" data-id="` + postsData[i].id + `"></div>
-                      <div class="net-votes" id="net-votes-"` + postsData[i].id + `>` + postsData[i].votes + `</div>
+                      <div class="net-votes" id="net-votes-` + postsData[i].id + `">` + postsData[i].votes + `</div>
                       <a href="javascript: void(0)" class="reply-btn" data-id="` + postsData[i].id + `">
                         Reply
                       </a>
@@ -144,7 +156,7 @@
                         <button type="button" class="new-comment-btn" id="new-comment-btn-` + postsData[i].id + `" data-id="` + postsData[i].id + `">Comment</button>
                       </div>
                     </form>`
-                    + comments +
+                    + (comments ? comments : '') +
                   `</div>
                 </div>`;
     }
@@ -164,16 +176,58 @@
     }
   }
 
-  function populateComments(commentsData){
-    debugger;
+  function populateComments(postData){
     var comments = '';
-    for(var i=0;i<commentsData.comments.length;i++){
-      if(commentsData.comments[i].level === 1){
-        while(commentsData.comments[i].hasChild){
-          
+    for(var i=0;i<postData.comments.length;i++){
+      if(postData.comments[i].level === 1){
+        comments += getCommentThread(postData.comments[i], postData);
+      }
+    }
+    return comments;
+  }
+
+  function getCommentThread(commentData, postData){
+    if(commentData.hasChild){
+      for(var i=0;i<postData.comments.length;i++){
+        if(commentData.childId === postData.comments[i].id){
+          var childComments = getCommentThread(postData.comments[i], postData);
+          break;
         }
       }
     }
+    commentThread = `<div class="comment flex-row" id="comment-` + commentData.id + `">
+                      <div>
+                        <img src="./img/` + commentData.profileImage + `" class="profile-img" alt="Profile Image">
+                      </div>
+                      <div class="flex-column comment-details">
+                        <div class="author-name">`
+                          + commentData.name +
+                        `</div>
+                        <div class="content">`
+                          + commentData.text +
+                        `</div>
+                        <div class="flex-row flex-valign">
+                          <div class="arrow arrow-up" data-id="` + commentData.id + `"></div>
+                          <div class="arrow arrow-down" data-id="` + commentData.id + `"></div>
+                          <div class="net-votes" id="net-votes-` + commentData.id + `">` + commentData.votes + `</div>
+                          <a href="javascript: void(0)" class="reply-btn" data-id="` + commentData.id + `">
+                            Reply
+                          </a>
+                          <a href="javascript: void(0)" class="share-btn">
+                            Share
+                          </a>
+                        </div>
+                        <form class="new-comment-form hidden" id="new-comment-form-` + commentData.id + `">
+                          <textarea name="status" class="new-comment-status" id="new-comment-status-` + commentData.id + `" rows="2" placeholder="comment"></textarea>
+                          <div class="flex-row">
+                            <input type="text" class="new-comment-username" id="new-comment-username-` + commentData.id + `" name="username" placeholder="username" />
+                            <button type="button" class="new-comment-btn" id="new-comment-btn-` + commentData.id + `" data-id="` + commentData.id + `">Comment</button>
+                          </div>
+                        </form>`
+                        + (childComments ? childComments : '') +
+                      `</div>
+                    </div>`;
+    return commentThread;
   }
 
 })();

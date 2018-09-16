@@ -18,11 +18,11 @@ server.use(middlewares);
 // 	res.jsonp({posts: posts, comments: comments});
 // })
 
-server.post('/update-vote', function(req, res){
-	var db = router.db
-	var posts = db.get('posts')
-	res.jsonp(posts)
-})
+// server.post('/update-vote', function(req, res){
+// 	var db = router.db
+// 	var posts = db.get('posts')
+// 	res.jsonp(posts)
+// })
 
 server.use(router);
 server.listen(3000, () => {
