@@ -2,6 +2,7 @@
 
 	load();
 
+  // Function to load initial data
 	function load(){
 		getData('GET', 'posts?_embed=comments', null, function(data){
       populatePosts(data);
@@ -10,6 +11,7 @@
     newPostBtn.addEventListener('click', submitPost);
 	}
 
+  // Function to initialize xhr object
 	function initRequest(){
 		var xhr;
     if(window.XMLHttpRequest){
@@ -21,6 +23,7 @@
     return xhr;
 	}
 
+  // Function to make AJAX request
 	function ajaxRequest(type, url, data, callback){
 		var xhr = (typeof xhr === 'undefined') ? initRequest() : xhr;
     var url = "http://localhost:3000/" + url;
@@ -44,6 +47,7 @@
     })(xhr, callback);
 	}
 
+  // AJAX request wrapper function to parse data
 	function getData(type, url, data, callback){
 		ajaxRequest(type, url, data, function(xhr) {
       if (xhr == 404) {
@@ -56,6 +60,7 @@
 	  });
 	}
 
+  // Function to submit a new Post
   function submitPost(){
     var newPostStatus = document.getElementById('new-post-status').value;
     var newPostUsername = document.getElementById('new-post-username').value;
@@ -74,11 +79,13 @@
     }
   }
 
+  // Function to open comment/reply form
   function openCommentForm(e){
     var commentForm = document.getElementById('new-comment-form-'+e.currentTarget.dataset.id);
     commentForm.classList.remove('hidden');
   }
 
+  // Function to submit a new Comment
   function submitComment(e){
     var newCommentStatus = document.getElementById('new-comment-status-'+this.dataset.id).value;
     var newCommentUsername = document.getElementById('new-comment-username-'+this.dataset.id).value;
@@ -105,6 +112,7 @@
     }
   }
 
+  // Function to handle Upvotes and Downvotes
   function castVote(e){
     var data, url;
     if(this.classList.contains('arrow-up')){
@@ -133,6 +141,7 @@
     });
   }
 
+  // Function to populate all Posts
   function populatePosts(postsData){
     var posts = '', comments = '';
     for(var i=0;i<postsData.length;i++){
@@ -147,6 +156,7 @@
     bindActionEvents();
   }
 
+  // Function to return Post Template
   function getPostTemplate(postData, comments){
     var voteColor;
     if(postData.votes > 0){
@@ -190,6 +200,7 @@
     return post;
   }
 
+  // Function to populate all Comments
   function populateComments(postData){
     var comments = '';
     for(var i=0;i<postData.comments.length;i++){
@@ -200,6 +211,7 @@
     return comments;
   }
 
+  // Function to return a single Comment Thread
   function getCommentThread(commentData, postData){
     if(commentData.hasChild){
       for(var i=0;i<postData.comments.length;i++){
@@ -213,6 +225,7 @@
     return commentThread;
   }
 
+  // Function to return Comment Template
   function getCommentTemplate(commentData, childComments){
     var voteColor;
     if(commentData.votes > 0){
@@ -256,6 +269,7 @@
     return comment;
   }
 
+  // Function to attach click events to Post/Comment action buttons
   function bindActionEvents(){
     var replyBtn = document.getElementsByClassName('reply-btn');
     for(var i=0;i<replyBtn.length;i++){
