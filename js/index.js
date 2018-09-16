@@ -3,7 +3,7 @@
 	load();
 
 	function load(){
-		getData('posts?_embed=comments', null, function(data){
+		getData('GET', 'posts?_embed=comments', null, function(data){
       populatePosts(data);
 		});
     var newPostBtn = document.getElementById('new-post-btn');
@@ -44,8 +44,8 @@
     })(xhr, callback);
 	}
 
-	function getData(url, data, callback){
-		ajaxRequest("GET", url, data, function(xhr) {
+	function getData(type, url, data, callback){
+		ajaxRequest(type, url, data, function(xhr) {
       if (xhr == 404) {
         callback(null);
       }
@@ -56,48 +56,12 @@
 	  });
 	}
 
-  function postData(url, data, callback){
-    ajaxRequest("POST", url, data, function(xhr) {
-      if (xhr == 404) {
-        callback(null);
-      }
-      else {
-        required_data = JSON.parse(xhr.responseText);
-        callback(required_data);
-      }
-    });
-  }
-
-  function putData(url, data, callback){
-    ajaxRequest("PUT", url, data, function(xhr) {
-      if (xhr == 404) {
-        callback(null);
-      }
-      else {
-        required_data = JSON.parse(xhr.responseText);
-        callback(required_data);
-      }
-    });
-  }
-
-  function patchData(url, data, callback){
-    ajaxRequest("PATCH", url, data, function(xhr) {
-      if (xhr == 404) {
-        callback(null);
-      }
-      else {
-        required_data = JSON.parse(xhr.responseText);
-        callback(required_data);
-      }
-    });
-  }
-
   function submitPost(){
     var newPostStatus = document.getElementById('new-post-status').value;
     var newPostUsername = document.getElementById('new-post-username').value;
     if(newPostStatus && newPostUsername){
       var data = {name: newPostUsername, profileImage: 'user.jpg', text: newPostStatus, votes: 0, createdAt: new Date().toLocaleString()};
-      postData('posts', data, function(postData){
+      getData('POST', 'posts', data, function(postData){
         var post = getPostTemplate(postData);
         var div = document.createElement('div');
         div.innerHTML = post;
@@ -120,7 +84,7 @@
     var newCommentUsername = document.getElementById('new-comment-username-'+this.dataset.id).value;
     if(newCommentStatus && newCommentUsername){
       var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(this.dataset.level)+1, postId: this.dataset.postid, parentId: this.dataset.id, hasChild: false, childId: ""};
-      postData('comments', data, function(commentData){
+      getData('POST', 'comments', data, function(commentData){
         var comment = getCommentTemplate(commentData);
         var div = document.createElement('div');
         div.innerHTML = comment;
@@ -135,7 +99,7 @@
         document.getElementById('new-comment-status-'+commentData.parentId).value = '';
         document.getElementById('new-comment-username-'+commentData.parentId).value = '';
         document.getElementById('new-comment-form-'+commentData.parentId).classList.add('hidden');
-        patchData('comments/'+commentData.parentId, {hasChild: true, childId: commentData.id});
+        getData('PATCH', 'comments/'+commentData.parentId, {hasChild: true, childId: commentData.id});
         bindActionEvents();
       });
     }
@@ -155,7 +119,7 @@
     else{
       url = 'comments/'+this.dataset.id;
     }
-    patchData(url, data, function(updatedData){
+    getData('PATCH', url, data, function(updatedData){
       var netVotes = document.getElementById('net-votes-'+updatedData.id);
       netVotes.innerHTML = updatedData.votes;
       if(updatedData.votes > 0){
