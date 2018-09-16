@@ -156,7 +156,16 @@
       url = 'comments/'+this.dataset.id;
     }
     patchData(url, data, function(updatedData){
-      document.getElementById('net-votes-'+updatedData.id).innerHTML = updatedData.votes;
+      var netVotes = document.getElementById('net-votes-'+updatedData.id);
+      netVotes.innerHTML = updatedData.votes;
+      if(updatedData.votes > 0){
+        netVotes.classList.remove('negative-votes');
+        netVotes.classList.add('positive-votes');
+      }
+      else{
+        netVotes.classList.remove('positive-votes');
+        netVotes.classList.add('negative-votes');
+      }
     });
   }
 
@@ -175,6 +184,13 @@
   }
 
   function getPostTemplate(postData, comments){
+    var voteColor;
+    if(postData.votes > 0){
+      voteColor = 'positive-votes';
+    }
+    else{
+      voteColor = 'negative-votes';
+    }
     var post = `<div class="post flex-row" id="post-` + postData.id + `">
                   <div>
                     <img src="./img/` + postData.profileImage + `" class="profile-img" alt="Profile Image">
@@ -189,7 +205,7 @@
                     <div class="flex-row flex-valign">
                       <div class="arrow arrow-up" data-id="` + postData.id + `"></div>
                       <div class="arrow arrow-down" data-id="` + postData.id + `"></div>
-                      <div class="net-votes" id="net-votes-` + postData.id + `" data-id="` + postData.id + `">` + postData.votes + `</div>
+                      <div class="net-votes ` + voteColor + `" id="net-votes-` + postData.id + `" data-id="` + postData.id + `">` + postData.votes + `</div>
                       <a href="javascript: void(0)" class="reply-btn" data-id="` + postData.id + `">
                         Reply
                       </a>
@@ -234,6 +250,13 @@
   }
 
   function getCommentTemplate(commentData, childComments){
+    var voteColor;
+    if(commentData.votes > 0){
+      voteColor = 'positive-votes';
+    }
+    else{
+      voteColor = 'negative-votes';
+    }
     var comment = `<div class="comment flex-row" id="comment-` + commentData.id + `">
                       <div>
                         <img src="./img/` + commentData.profileImage + `" class="profile-img" alt="Profile Image">
@@ -248,7 +271,7 @@
                         <div class="flex-row flex-valign">
                           <div class="arrow arrow-up" data-id="` + commentData.id + `"></div>
                           <div class="arrow arrow-down" data-id="` + commentData.id + `"></div>
-                          <div class="net-votes" id="net-votes-` + commentData.id + `" data-id="` + commentData.id + `">` + commentData.votes + `</div>
+                          <div class="net-votes ` + voteColor + `" id="net-votes-` + commentData.id + `" data-id="` + commentData.id + `">` + commentData.votes + `</div>
                           <a href="javascript: void(0)" class="reply-btn" data-id="` + commentData.id + `">
                             Reply
                           </a>
