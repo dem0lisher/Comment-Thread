@@ -3,23 +3,23 @@
     {
       "name": "Kerem Suer",
       "profileImage": "user.jpg",
-      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit at placeat accusamus asperiores voluptatum enim reprehenderit, error culpa consequatur fuga accusantium assumenda, quasi, obcaecati ab quas et tempore vitae est?",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit at placeat accusamus asperiores voluptatum enim",
       "votes": 2,
       "createdAt": "15/09/2018, 00:30:26",
       "id": "sudkm5c"
     },
     {
-      "name": "kjvhgjvgklhg",
+      "name": "Hugh Jordan",
       "profileImage": "user.jpg",
-      "text": "hbklblkh",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus vitae deleniti",
       "votes": 2,
       "createdAt": "15/09/2018, 00:33:26",
       "id": "midtX4G"
     },
     {
-      "name": "treytrt;",
+      "name": "Lisa Meyers",
       "profileImage": "user.jpg",
-      "text": "kjhvkjgjkh",
+      "text": "Lorem ipsum dolor sit amet",
       "votes": 0,
       "createdAt": "15/09/2018, 00:34:39",
       "id": "cxk84iy"
@@ -27,9 +27,9 @@
   ],
   "comments": [
     {
-      "name": "kdvjbkelfj",
+      "name": "Carl Jones",
       "profileImage": "user.jpg",
-      "text": "nicekjhhlkj",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia fugit nostrum ducimus voluptas",
       "votes": 0,
       "createdAt": "15/09/2018, 14:06:51",
       "level": 1,
@@ -40,9 +40,9 @@
       "id": "eud73nk"
     },
     {
-      "name": "rsfcgvbn",
+      "name": "Alex Hales",
       "profileImage": "user.jpg",
-      "text": "kjbkjlbblkmk",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
       "votes": 0,
       "createdAt": "15/09/2018, 14:08:38",
       "level": 1,
@@ -53,9 +53,9 @@
       "id": "dfjb5jh"
     },
     {
-      "name": "dsjgfwdugye",
+      "name": "Rick Joe",
       "profileImage": "user.jpg",
-      "text": "sdkjkgbgk",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
       "votes": 1,
       "createdAt": "15/09/2018, 14:08:38",
       "level": 2,
@@ -66,9 +66,9 @@
       "id": "kjake3c"
     },
     {
-      "name": "qwertyuiop",
+      "name": "Serena Lewis",
       "profileImage": "user.jpg",
-      "text": "hgfajgcjsdkjb",
+      "text": "Lorem ipsum dolor sit amet",
       "votes": 0,
       "createdAt": "16/09/2018, 10:32:33",
       "level": 1,
@@ -79,9 +79,9 @@
       "id": "3pDcyrr"
     },
     {
-      "name": "jain",
+      "name": "Jack Layman",
       "profileImage": "user.jpg",
-      "text": "aadhar",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
       "votes": 1,
       "createdAt": "16/09/2018, 21:51:15",
       "level": 3,
