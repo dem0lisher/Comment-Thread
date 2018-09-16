@@ -30,12 +30,12 @@
     xhr.send(data);
     xhr.onreadystatechange = (function(xhr, callback) {
       return function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
+        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
           if (callback) {
             callback(xhr);
           }
         }
-        else if (xhr.readyState == 4 && xhr.status == 0) {
+        else if (xhr.readyState === 4 && xhr.status === 0) {
           if (callback) {
             callback(404);
           }
@@ -97,8 +97,15 @@
     var newPostUsername = document.getElementById('new-post-username').value;
     if(newPostStatus && newPostUsername){
       var data = {name: newPostUsername, profileImage: 'user.jpg', text: newPostStatus, votes: 0, createdAt: new Date().toLocaleString()};
-      putData('posts', data, function(postData){
-        debugger;
+      postData('posts', data, function(postData){
+        var post = getPostTemplate(postData);
+        var div = document.createElement('div');
+        div.innerHTML = post;
+        var postsContainer = document.getElementById('posts-container');
+        postsContainer.appendChild(div);
+        document.getElementById('new-post-status').value = '';
+        document.getElementById('new-post-username').value = '';
+        bindActionEvents();
       });
     }
   }
@@ -109,16 +116,27 @@
   }
 
   function submitComment(e){
-    var newCommentStatus = document.getElementById('new-comment-status-'+e.currentTarget.dataset.id).value;
-    var newCommentUsername = document.getElementById('new-comment-username-'+e.currentTarget.dataset.id).value;
+    var newCommentStatus = document.getElementById('new-comment-status-'+this.dataset.id).value;
+    var newCommentUsername = document.getElementById('new-comment-username-'+this.dataset.id).value;
     if(newCommentStatus && newCommentUsername){
-      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(e.currentTarget.dataset.level)+1, postId: e.currentTarget.dataset.id, hasChild: false, childId: ""};
+      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(this.dataset.level)+1, postId: this.dataset.postid, parentId: this.dataset.id, hasChild: false, childId: ""};
       postData('comments', data, function(commentData){
-        debugger;
-      });
-      debugger;
-      patchData('comments/kjake3c', {hasChild: true}, function(commentData){
-        debugger;
+        var comment = getCommentTemplate(commentData);
+        var div = document.createElement('div');
+        div.innerHTML = comment;
+        if(commentData.level === 1){
+          var postDetails = document.getElementById('post-details-'+commentData.parentId);
+          postDetails.appendChild(div);
+        }
+        else{
+          var commentDetails = document.getElementById('comment-details-'+commentData.parentId);
+          commentDetails.appendChild(div);
+        }
+        document.getElementById('new-comment-status-'+commentData.parentId).value = '';
+        document.getElementById('new-comment-username-'+commentData.parentId).value = '';
+        document.getElementById('new-comment-form-'+commentData.parentId).classList.add('hidden');
+        patchData('comments/'+commentData.parentId, {hasChild: true, childId: commentData.id});
+        bindActionEvents();
       });
     }
   }
@@ -149,53 +167,47 @@
       if(postsData[i].comments && postsData[i].comments.length){
         comments = populateComments(postsData[i]);
       }
-      posts += `<div class="post flex-row" id="post-` + postsData[i].id + `">
+      posts += getPostTemplate(postsData[i], comments);
+    }
+    var postsContainer = document.getElementById('posts-container');
+    postsContainer.innerHTML = posts;
+    bindActionEvents();
+  }
+
+  function getPostTemplate(postData, comments){
+    var post = `<div class="post flex-row" id="post-` + postData.id + `">
                   <div>
-                    <img src="./img/` + postsData[i].profileImage + `" class="profile-img" alt="Profile Image">
+                    <img src="./img/` + postData.profileImage + `" class="profile-img" alt="Profile Image">
                   </div>
-                  <div class="flex-column post-details">
+                  <div class="flex-column post-details" id="post-details-` + postData.id + `">
                     <div class="author-name">`
-                      + postsData[i].name +
+                      + postData.name +
                     `</div>
                     <div class="content">`
-                      + postsData[i].text +
+                      + postData.text +
                     `</div>
                     <div class="flex-row flex-valign">
-                      <div class="arrow arrow-up" data-id="` + postsData[i].id + `"></div>
-                      <div class="arrow arrow-down" data-id="` + postsData[i].id + `"></div>
-                      <div class="net-votes" id="net-votes-` + postsData[i].id + `" data-id="` + postsData[i].id + `">` + postsData[i].votes + `</div>
-                      <a href="javascript: void(0)" class="reply-btn" data-id="` + postsData[i].id + `">
+                      <div class="arrow arrow-up" data-id="` + postData.id + `"></div>
+                      <div class="arrow arrow-down" data-id="` + postData.id + `"></div>
+                      <div class="net-votes" id="net-votes-` + postData.id + `" data-id="` + postData.id + `">` + postData.votes + `</div>
+                      <a href="javascript: void(0)" class="reply-btn" data-id="` + postData.id + `">
                         Reply
                       </a>
                       <a href="javascript: void(0)" class="share-btn">
                         Share
                       </a>
                     </div>
-                    <form class="new-comment-form hidden" id="new-comment-form-` + postsData[i].id + `">
-                      <textarea name="status" class="new-comment-status" id="new-comment-status-` + postsData[i].id + `" rows="2" placeholder="comment"></textarea>
+                    <form class="new-comment-form hidden" id="new-comment-form-` + postData.id + `">
+                      <textarea name="status" class="new-comment-status" id="new-comment-status-` + postData.id + `" rows="2" placeholder="comment"></textarea>
                       <div class="flex-row">
-                        <input type="text" class="new-comment-username" id="new-comment-username-` + postsData[i].id + `" name="username" placeholder="username" />
-                        <button type="button" class="new-comment-btn" id="new-comment-btn-` + postsData[i].id + `" data-id="` + postsData[i].id + `" data-level=0>Comment</button>
+                        <input type="text" class="new-comment-username" id="new-comment-username-` + postData.id + `" name="username" placeholder="username" />
+                        <button type="button" class="new-comment-btn" id="new-comment-btn-` + postData.id + `" data-id="` + postData.id + `" data-level=0>Comment</button>
                       </div>
                     </form>`
                     + (comments ? comments : '') +
                   `</div>
                 </div>`;
-    }
-    var postsContainer = document.getElementById('posts-container');
-    postsContainer.innerHTML = posts;
-    var replyBtn = document.getElementsByClassName('reply-btn');
-    for(var i=0;i<replyBtn.length;i++){
-      replyBtn[i].addEventListener('click', openCommentForm);
-    }
-    var commentBtn = document.getElementsByClassName('new-comment-btn');
-    for(i=0;i<commentBtn.length;i++){
-      commentBtn[i].addEventListener('click', submitComment);
-    }
-    var voteBtn = document.getElementsByClassName('arrow');
-    for(i=0;i<voteBtn.length;i++){
-      voteBtn[i].addEventListener('click', castVote);
-    }
+    return post;
   }
 
   function populateComments(postData){
@@ -217,11 +229,16 @@
         }
       }
     }
-    commentThread = `<div class="comment flex-row" id="comment-` + commentData.id + `">
+    var commentThread = getCommentTemplate(commentData, childComments);
+    return commentThread;
+  }
+
+  function getCommentTemplate(commentData, childComments){
+    var comment = `<div class="comment flex-row" id="comment-` + commentData.id + `">
                       <div>
                         <img src="./img/` + commentData.profileImage + `" class="profile-img" alt="Profile Image">
                       </div>
-                      <div class="flex-column comment-details">
+                      <div class="flex-column comment-details" id="comment-details-` + commentData.id + `">
                         <div class="author-name">`
                           + commentData.name +
                         `</div>
@@ -243,13 +260,28 @@
                           <textarea name="status" class="new-comment-status" id="new-comment-status-` + commentData.id + `" rows="2" placeholder="comment"></textarea>
                           <div class="flex-row">
                             <input type="text" class="new-comment-username" id="new-comment-username-` + commentData.id + `" name="username" placeholder="username" />
-                            <button type="button" class="new-comment-btn" id="new-comment-btn-` + commentData.id + `" data-id="` + commentData.id + `" data-level="` + commentData.level + `">Comment</button>
+                            <button type="button" class="new-comment-btn" id="new-comment-btn-` + commentData.id + `" data-id="` + commentData.id + `" data-level="` + commentData.level + `" data-postid="` + commentData.postId + `">Comment</button>
                           </div>
                         </form>`
                         + (childComments ? childComments : '') +
                       `</div>
                     </div>`;
-    return commentThread;
+    return comment;
+  }
+
+  function bindActionEvents(){
+    var replyBtn = document.getElementsByClassName('reply-btn');
+    for(var i=0;i<replyBtn.length;i++){
+      replyBtn[i].addEventListener('click', openCommentForm);
+    }
+    var commentBtn = document.getElementsByClassName('new-comment-btn');
+    for(i=0;i<commentBtn.length;i++){
+      commentBtn[i].addEventListener('click', submitComment);
+    }
+    var voteBtn = document.getElementsByClassName('arrow');
+    for(i=0;i<voteBtn.length;i++){
+      voteBtn[i].addEventListener('click', castVote);
+    }
   }
 
 })();

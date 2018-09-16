@@ -12,7 +12,7 @@
       "name": "kjvhgjvgklhg",
       "profileImage": "user.jpg",
       "text": "hbklblkh",
-      "votes": 1,
+      "votes": 2,
       "createdAt": "15/09/2018, 00:33:26",
       "id": "midtX4G"
     },
@@ -34,6 +34,7 @@
       "createdAt": "15/09/2018, 14:06:51",
       "level": 1,
       "postId": "cxk84iy",
+      "parentId": "cxk84iy",
       "hasChild": false,
       "childId": "",
       "id": "eud73nk"
@@ -46,6 +47,7 @@
       "createdAt": "15/09/2018, 14:08:38",
       "level": 1,
       "postId": "midtX4G",
+      "parentId": "midtX4G",
       "hasChild": true,
       "childId": "kjake3c",
       "id": "dfjb5jh"
@@ -58,8 +60,9 @@
       "createdAt": "15/09/2018, 14:08:38",
       "level": 2,
       "postId": "midtX4G",
-      "hasChild": false,
-      "childId": "",
+      "parentId": "dfjb5jh",
+      "hasChild": true,
+      "childId": "KPb_8a7",
       "id": "kjake3c"
     },
     {
@@ -70,21 +73,23 @@
       "createdAt": "16/09/2018, 10:32:33",
       "level": 1,
       "postId": "midtX4G",
+      "parentId": "midtX4G",
       "hasChild": false,
       "childId": "",
       "id": "3pDcyrr"
     },
     {
-      "name": "xzxxvcvcbjh",
+      "name": "jain",
       "profileImage": "user.jpg",
-      "text": "hkhsdbjbjhgf",
-      "votes": 0,
-      "createdAt": "16/09/2018, 11:07:29",
-      "level": 1,
-      "postId": "kjake3c",
+      "text": "aadhar",
+      "votes": 1,
+      "createdAt": "16/09/2018, 21:51:15",
+      "level": 3,
+      "postId": "midtX4G",
+      "parentId": "kjake3c",
       "hasChild": false,
       "childId": "",
-      "id": "FLi5dE8"
+      "id": "KPb_8a7"
     }
   ]
 }
