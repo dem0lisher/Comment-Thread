@@ -36,7 +36,7 @@
       "postId": "cxk84iy",
       "parentId": "cxk84iy",
       "hasChild": false,
-      "childId": "",
+      "childId": [],
       "id": "eud73nk"
     },
     {
@@ -49,7 +49,9 @@
       "postId": "midtX4G",
       "parentId": "midtX4G",
       "hasChild": true,
-      "childId": "kjake3c",
+      "childId": [
+        "kjake3c"
+      ],
       "id": "dfjb5jh"
     },
     {
@@ -62,7 +64,9 @@
       "postId": "midtX4G",
       "parentId": "dfjb5jh",
       "hasChild": true,
-      "childId": "KPb_8a7",
+      "childId": [
+        "KPb_8a7"
+      ],
       "id": "kjake3c"
     },
     {
@@ -75,7 +79,7 @@
       "postId": "midtX4G",
       "parentId": "midtX4G",
       "hasChild": false,
-      "childId": "",
+      "childId": [],
       "id": "3pDcyrr"
     },
     {
@@ -88,7 +92,7 @@
       "postId": "midtX4G",
       "parentId": "kjake3c",
       "hasChild": false,
-      "childId": "",
+      "childId": [],
       "id": "KPb_8a7"
     }
   ]

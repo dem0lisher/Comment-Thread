@@ -90,11 +90,14 @@
     var newCommentStatus = document.getElementById('new-comment-status-'+this.dataset.id).value;
     var newCommentUsername = document.getElementById('new-comment-username-'+this.dataset.id).value;
     if(newCommentStatus && newCommentUsername){
-      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(this.dataset.level)+1, postId: this.dataset.postid, parentId: this.dataset.id, hasChild: false, childId: ""};
+      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(this.dataset.level)+1, postId: this.dataset.postid, parentId: this.dataset.id, hasChild: false, childId: []};
       getData('POST', 'comments', data, function(commentData){
         var comment = getCommentTemplate(commentData);
         var div = document.createElement('div');
         div.innerHTML = comment;
+        document.getElementById('new-comment-status-'+commentData.parentId).value = '';
+        document.getElementById('new-comment-username-'+commentData.parentId).value = '';
+        document.getElementById('new-comment-form-'+commentData.parentId).classList.add('hidden');
         if(commentData.level === 1){
           var postDetails = document.getElementById('post-details-'+commentData.parentId);
           postDetails.appendChild(div);
@@ -102,11 +105,12 @@
         else{
           var commentDetails = document.getElementById('comment-details-'+commentData.parentId);
           commentDetails.appendChild(div);
+          getData('GET', 'comments/'+commentData.parentId, null, function(data){
+            var childId = data.childId;
+            childId.push(commentData.id);
+            getData('PATCH', 'comments/'+commentData.parentId, {hasChild: true, childId: childId});
+          });
         }
-        document.getElementById('new-comment-status-'+commentData.parentId).value = '';
-        document.getElementById('new-comment-username-'+commentData.parentId).value = '';
-        document.getElementById('new-comment-form-'+commentData.parentId).classList.add('hidden');
-        getData('PATCH', 'comments/'+commentData.parentId, {hasChild: true, childId: commentData.id});
         bindActionEvents();
       });
     }
@@ -213,11 +217,11 @@
 
   // Function to return a single Comment Thread
   function getCommentThread(commentData, postData){
+    var childComments = '';
     if(commentData.hasChild){
       for(var i=0;i<postData.comments.length;i++){
-        if(commentData.childId === postData.comments[i].id){
-          var childComments = getCommentThread(postData.comments[i], postData);
-          break;
+        if(commentData.childId.indexOf(postData.comments[i].id) > -1){
+          childComments += getCommentThread(postData.comments[i], postData);
         }
       }
     }
