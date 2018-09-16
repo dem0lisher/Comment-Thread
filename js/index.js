@@ -80,12 +80,24 @@
     });
   }
 
+  function patchData(url, data, callback){
+    ajaxRequest("PATCH", url, data, function(xhr) {
+      if (xhr == 404) {
+        callback(null);
+      }
+      else {
+        required_data = JSON.parse(xhr.responseText);
+        callback(required_data);
+      }
+    });
+  }
+
   function submitPost(){
     var newPostStatus = document.getElementById('new-post-status').value;
     var newPostUsername = document.getElementById('new-post-username').value;
     if(newPostStatus && newPostUsername){
       var data = {name: newPostUsername, profileImage: 'user.jpg', text: newPostStatus, votes: 0, createdAt: new Date().toLocaleString()};
-      postData('posts', data, function(postData){
+      putData('posts', data, function(postData){
         debugger;
       });
     }
@@ -100,23 +112,33 @@
     var newCommentStatus = document.getElementById('new-comment-status-'+e.currentTarget.dataset.id).value;
     var newCommentUsername = document.getElementById('new-comment-username-'+e.currentTarget.dataset.id).value;
     if(newCommentStatus && newCommentUsername){
-      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, createdAt: new Date().toLocaleString(), postId: e.currentTarget.dataset.id};
+      var data = {name: newCommentUsername, profileImage: 'user.jpg', text: newCommentStatus, votes: 0, createdAt: new Date().toLocaleString(), level: parseInt(e.currentTarget.dataset.level)+1, postId: e.currentTarget.dataset.id, hasChild: false, childId: ""};
       postData('comments', data, function(commentData){
+        debugger;
+      });
+      debugger;
+      patchData('comments/kjake3c', {hasChild: true}, function(commentData){
         debugger;
       });
     }
   }
 
   function castVote(e){
-    debugger;
+    var data, url;
     if(this.classList.contains('arrow-up')){
-      var data = {votes: document.getElementById('net-votes-'+e.currentTarget.dataset.post.id).innerHTML + 1};
+      data = {votes: parseInt(document.getElementById('net-votes-'+this.dataset.id).innerHTML) + 1};
     }
     else{
-      var data = {votes: document.getElementById('net-votes-'+e.currentTarget.dataset.post.id).innerHTML - 1};
+      data = {votes: parseInt(document.getElementById('net-votes-'+this.dataset.id).innerHTML) - 1};
     }
-    putData('posts/'+this.dataset.id, data, function(postsData){
-      debugger;
+    if(this.parentNode.parentNode.classList.contains('post-details')){
+      url = 'posts/'+this.dataset.id;
+    }
+    else{
+      url = 'comments/'+this.dataset.id;
+    }
+    patchData(url, data, function(updatedData){
+      document.getElementById('net-votes-'+updatedData.id).innerHTML = updatedData.votes;
     });
   }
 
@@ -141,7 +163,7 @@
                     <div class="flex-row flex-valign">
                       <div class="arrow arrow-up" data-id="` + postsData[i].id + `"></div>
                       <div class="arrow arrow-down" data-id="` + postsData[i].id + `"></div>
-                      <div class="net-votes" id="net-votes-` + postsData[i].id + `">` + postsData[i].votes + `</div>
+                      <div class="net-votes" id="net-votes-` + postsData[i].id + `" data-id="` + postsData[i].id + `">` + postsData[i].votes + `</div>
                       <a href="javascript: void(0)" class="reply-btn" data-id="` + postsData[i].id + `">
                         Reply
                       </a>
@@ -153,7 +175,7 @@
                       <textarea name="status" class="new-comment-status" id="new-comment-status-` + postsData[i].id + `" rows="2" placeholder="comment"></textarea>
                       <div class="flex-row">
                         <input type="text" class="new-comment-username" id="new-comment-username-` + postsData[i].id + `" name="username" placeholder="username" />
-                        <button type="button" class="new-comment-btn" id="new-comment-btn-` + postsData[i].id + `" data-id="` + postsData[i].id + `">Comment</button>
+                        <button type="button" class="new-comment-btn" id="new-comment-btn-` + postsData[i].id + `" data-id="` + postsData[i].id + `" data-level=0>Comment</button>
                       </div>
                     </form>`
                     + (comments ? comments : '') +
@@ -209,7 +231,7 @@
                         <div class="flex-row flex-valign">
                           <div class="arrow arrow-up" data-id="` + commentData.id + `"></div>
                           <div class="arrow arrow-down" data-id="` + commentData.id + `"></div>
-                          <div class="net-votes" id="net-votes-` + commentData.id + `">` + commentData.votes + `</div>
+                          <div class="net-votes" id="net-votes-` + commentData.id + `" data-id="` + commentData.id + `">` + commentData.votes + `</div>
                           <a href="javascript: void(0)" class="reply-btn" data-id="` + commentData.id + `">
                             Reply
                           </a>
@@ -221,7 +243,7 @@
                           <textarea name="status" class="new-comment-status" id="new-comment-status-` + commentData.id + `" rows="2" placeholder="comment"></textarea>
                           <div class="flex-row">
                             <input type="text" class="new-comment-username" id="new-comment-username-` + commentData.id + `" name="username" placeholder="username" />
-                            <button type="button" class="new-comment-btn" id="new-comment-btn-` + commentData.id + `" data-id="` + commentData.id + `">Comment</button>
+                            <button type="button" class="new-comment-btn" id="new-comment-btn-` + commentData.id + `" data-id="` + commentData.id + `" data-level="` + commentData.level + `">Comment</button>
                           </div>
                         </form>`
                         + (childComments ? childComments : '') +
